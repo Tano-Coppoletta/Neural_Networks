@@ -6,8 +6,10 @@ if __name__ == '__main__':
     w0= np.random.uniform(-1/4,1/4)
     w1=np.random.uniform(-1,1)
     w2=np.random.uniform(-1,1)
-
-    n_points=1000
+    print("w0",w0)
+    print("w1",w1)
+    print("w2",w2)
+    n_points=100
 
     S = np.random.uniform(-1, 1, size=(n_points, 3))
     #S = | x1 | x2 | classification(0/1)
@@ -37,7 +39,7 @@ if __name__ == '__main__':
             s2_cnt+=1
    
 
-    plt.title("Homework 2")
+    plt.title("Exercise 1.g")
 
     plt.xlabel("x1")
     plt.ylabel("x2")
@@ -54,15 +56,18 @@ if __name__ == '__main__':
 
     #(h) PTA
     n=1
-    w0_= random.uniform(-1,1)
-    w1_=random.uniform(-1,1)
-    w2_=random.uniform(-1,1)
+    w0_= np.random.uniform(-1,1)
+    w1_=np.random.uniform(-1,1)
+    w2_=np.random.uniform(-1,1)
     w=np.array([w0_,w1_,w2_])
+
+    print(w[0],w[1],w[2])
     
     em = np.zeros((1000,2),dtype=float)
     #| epoch | misclassification | 
     index=0
     misclassification=-1
+    em[index][0]=1
     
     while(misclassification!=0):
         #initialize the number of misclassification to 0
@@ -86,13 +91,14 @@ if __name__ == '__main__':
         em[index+1][0]=em[index][0]+1
         index+=1
 
+    print(w[0],w[1],w[2])
     plt.title("Epoch vs n. of misclassificatoins")
     plt.xlabel("Epoch")
     plt.ylabel("Number of misclassifications")
     plt.plot(em[0:index,0],em[0:index,1],'r')
     plt.show()
 
-    plt.title("Homework 2")
+    plt.title("Plot with weights found with PTA")
 
     plt.xlabel("x1")
     plt.ylabel("x2")
