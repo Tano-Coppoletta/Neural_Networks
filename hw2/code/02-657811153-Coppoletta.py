@@ -17,8 +17,8 @@ if __name__ == '__main__':
     w = np.array([w0,w1,w2])
     S1=np.zeros((n_points,2))
     s1_cnt=0
-    s2_cnt=0
-    S2=np.zeros((n_points,2))
+    s0_cnt=0
+    S0=np.zeros((n_points,2))
     x=np.zeros(n_points)
  
     for i in range(n_points):
@@ -32,30 +32,32 @@ if __name__ == '__main__':
             S[i][2]=1
             s1_cnt+=1
         else:
-            S2[s2_cnt][0]=S[i][0]
-            S2[s2_cnt][1]=S[i][1]
+            S0[s0_cnt][0]=S[i][0]
+            S0[s0_cnt][1]=S[i][1]
             #save the desired output
             S[i][2]=0
-            s2_cnt+=1
+            s0_cnt+=1
    
 
-    plt.title("Exercise 1.g")
+    plt.title("Eta = 1")
 
     plt.xlabel("x1")
     plt.ylabel("x2")
     plt.ylim(-1.15,1.15)
     plt.grid()
     plt.scatter(S1[0:s1_cnt,0],S1[0:s1_cnt,1],color='green',marker='^',s=15)
-    plt.scatter(S2[0:s2_cnt, 0], S2[0:s2_cnt, 1], color='red', marker='*', s=15)
+    plt.scatter(S0[0:s0_cnt, 0], S0[0:s0_cnt, 1], color='red', marker='*', s=15)
 
     x = np.linspace(-1,1,1000)
     y=(-w0-w1*x)/w2
     plt.plot(x,y,'r')
-    plt.legend(["x1", "x2","Boundary"])
+    plt.legend(["S1", "S0","Boundary"])
     plt.show()
 
     #(h) PTA
+    #eta
     n=1
+
     w0_= np.random.uniform(-1,1)
     w1_=np.random.uniform(-1,1)
     w2_=np.random.uniform(-1,1)
@@ -63,7 +65,7 @@ if __name__ == '__main__':
 
     print(w[0],w[1],w[2])
     
-    em = np.zeros((1000,2),dtype=float)
+    em = np.zeros((100,2),dtype=float)
     #| epoch | misclassification | 
     index=0
     misclassification=-1
@@ -87,12 +89,12 @@ if __name__ == '__main__':
                 w = w + (n*X.transpose())
                 em[index][1]+=1
                 misclassification+=1
-        print("Misclassification ",em[index][1],"Epoch: ",em[index][0])
+        #print("Misclassification ",em[index][1],"Epoch: ",em[index][0])
         em[index+1][0]=em[index][0]+1
         index+=1
 
     print(w[0],w[1],w[2])
-    plt.title("Epoch vs n. of misclassificatoins")
+    plt.title("Epoch vs n. of misclassifications eta=1")
     plt.xlabel("Epoch")
     plt.ylabel("Number of misclassifications")
     plt.plot(em[0:index,0],em[0:index,1],'r')
@@ -105,11 +107,11 @@ if __name__ == '__main__':
     plt.ylim(-1.15,1.15)
     plt.grid()
     plt.scatter(S1[0:s1_cnt,0],S1[0:s1_cnt,1],color='green',marker='^',s=15)
-    plt.scatter(S2[0:s2_cnt, 0], S2[0:s2_cnt, 1], color='red', marker='*', s=15)
+    plt.scatter(S0[0:s0_cnt, 0], S0[0:s0_cnt, 1], color='red', marker='*', s=15)
     x = np.linspace(-1,1,100)
     y=(-w[0]-w[1]*x)/w[2]
     plt.plot(x,y,'r')
-    plt.legend(["x1", "x2","Boundary"])
+    plt.legend(["S1", "S0","Boundary"])
     plt.show()
         
 
