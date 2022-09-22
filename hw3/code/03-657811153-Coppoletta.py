@@ -20,7 +20,7 @@ if __name__ == '__main__':
     image_size = 28
 
     #decide n <=60000
-    n = 60000
+    n = 1000
 
     f.read(16)
     buf = f.read(image_size * image_size * n)
@@ -40,17 +40,20 @@ if __name__ == '__main__':
    
     
     #parameters
-    eta=0.4 
-    epsilon=0.14
+    eta=1 
+    #eta=0.4 #for (i)
+    epsilon=0
+    #epsilon=0.1 #for (i)
 
-    #initialize random weights
-    #W = np.random.uniform(-1,1,(10, 784))
+    #initialize random weights 
+    W = np.random.uniform(-1,1,(10, 784))
     #W = np.random.uniform(-1/2,1/2,(10, 784))
-    W = np.random.uniform(-1/10,1/10,(10, 784))
+    #W = np.random.uniform(-1/10,1/10,(10, 784))
     epoch=1
     em = np.zeros((99999,2),dtype=float)
     #| epoch | misclassification | 
     
+    #TRAINING
     for i in range(0,n):
         v=np.dot(W, images[:,i]) #v=Wxi
         j=np.argmax(v)
@@ -84,7 +87,7 @@ if __name__ == '__main__':
             W=W+eta*(np.dot((label_bin-stepFunction(Wxi)),(images[:,z]).reshape(1,784)))
             
 
-
+    #plot
     plt.title("Epoch vs n. of misclassifications")
     plt.xlabel("Epoch")
     plt.ylabel("Number of misclassifications")
