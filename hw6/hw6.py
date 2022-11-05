@@ -26,16 +26,16 @@ train_dataset = torchvision.datasets.MNIST(data_dir, train=True, download=True)
 test_dataset  = torchvision.datasets.MNIST(data_dir, train=False, download=True)
 
 
-fig, axs = plt.subplots(5, 5, figsize=(8,8))
-for ax in axs.flatten():
+#fig, axs = plt.subplots(5, 5, figsize=(8,8))
+#for ax in axs.flatten():
     # random.choice allows to randomly sample from a list-like object (basically anything that can be accessed with an index, like our dataset)
-    img, label = random.choice(train_dataset)
-    ax.imshow(np.array(img), cmap='gist_gray')
-    ax.set_title('Label: %d' % label)
-    ax.set_xticks([])
-    ax.set_yticks([])
-plt.tight_layout()
-plt.show()
+ #   img, label = random.choice(train_dataset)
+   # ax.imshow(np.array(img), cmap='gist_gray')
+ #   ax.set_title('Label: %d' % label)
+  #  ax.set_xticks([])
+  #  ax.set_yticks([])
+#plt.tight_layout()
+#plt.show()
 
 train_transform = transforms.Compose([
     transforms.ToTensor(),
@@ -249,10 +249,10 @@ def test_epoch_den(encoder, decoder, device, dataloader, loss_fn,noise_factor=0.
     return val_loss.data
 
 def plot_ae_outputs_den(encoder,decoder,n=5,noise_factor=0.3):
-    plt.figure(figsize=(10,4.5))
+  #  plt.figure(figsize=(10,4.5))
     for i in range(n):
 
-      ax = plt.subplot(3,n,i+1)
+   #   ax = plt.subplot(3,n,i+1)
       img = test_dataset[i][0].unsqueeze(0)
       image_noisy = add_noise(img,noise_factor)     
       image_noisy = image_noisy.to(device)
@@ -263,31 +263,31 @@ def plot_ae_outputs_den(encoder,decoder,n=5,noise_factor=0.3):
       with torch.no_grad():
          rec_img  = decoder(encoder(image_noisy))
 
-      plt.imshow(img.cpu().squeeze().numpy(), cmap='gist_gray')
-      ax.get_xaxis().set_visible(False)
-      ax.get_yaxis().set_visible(False)  
-      if i == n//2:
-        ax.set_title('Original images')
-      ax = plt.subplot(3, n, i + 1 + n)
-      plt.imshow(image_noisy.cpu().squeeze().numpy(), cmap='gist_gray')
-      ax.get_xaxis().set_visible(False)
-      ax.get_yaxis().set_visible(False)  
-      if i == n//2:
-        ax.set_title('Corrupted images')
+   #   plt.imshow(img.cpu().squeeze().numpy(), cmap='gist_gray')
+  #    ax.get_xaxis().set_visible(False)
+  #    ax.get_yaxis().set_visible(False)
+   #   if i == n//2:
+   #     ax.set_title('Original images')
+  #    ax = plt.subplot(3, n, i + 1 + n)
+     # plt.imshow(image_noisy.cpu().squeeze().numpy(), cmap='gist_gray')
+  #    ax.get_xaxis().set_visible(False)
+  #    ax.get_yaxis().set_visible(False)
+  #    if i == n//2:
+   #     ax.set_title('Corrupted images')
 
-      ax = plt.subplot(3, n, i + 1 + n + n)
-      plt.imshow(rec_img.cpu().squeeze().numpy(), cmap='gist_gray')  
-      ax.get_xaxis().set_visible(False)
-      ax.get_yaxis().set_visible(False)  
-      if i == n//2:
-         ax.set_title('Reconstructed images')
-    plt.subplots_adjust(left=0.1,
-                    bottom=0.1, 
-                    right=0.7, 
-                    top=0.9, 
-                    wspace=0.3, 
-                    hspace=0.3)     
-    plt.show()
+   #   ax = plt.subplot(3, n, i + 1 + n + n)
+    #  plt.imshow(rec_img.cpu().squeeze().numpy(), cmap='gist_gray')
+    #  ax.get_xaxis().set_visible(False)
+    #  ax.get_yaxis().set_visible(False)
+  #    if i == n//2:
+  #       ax.set_title('Reconstructed images')
+   # plt.subplots_adjust(left=0.1,
+      #              bottom=0.1,
+      #              right=0.7,
+      #              top=0.9,
+     #               wspace=0.3,
+     #               hspace=0.3)
+   # plt.show()
 
 ### Training cycle
 noise_factor = 0.3
@@ -335,7 +335,7 @@ for i in range(3):
       for pos_y in range(28):
         matrix_with_images[i*28 + pos_x][j*28 + pos_y]=rnd_images[img_num][pos_x][pos_y]
     img_num+=1
-plt.imshow(matrix_with_images, cmap='gist_gray')
+#plt.imshow(matrix_with_images, cmap='gist_gray')
 
 # put your clustering accuracy calculation here
 train_loader2 = torch.utils.data.DataLoader(train_data, batch_size=1)
@@ -358,18 +358,30 @@ for i in range(10):
       if labels[z].item()==i and kmeans.labels_[z]==j:
         matrix[i][j]+=1
 
-max =0
 map = np.zeros((10,1))
 
 #i are the true label
 #j are the label assigned by the k-means
 for i in range(10):
-  for j in range(10):
-    if matrix[i][j]> max:
-      if j not in map:
-        max = matrix[i][j]
-        map[i]=j
-  max=0
+  max_index = np.argmax(matrix[i,:])
+  map[i]=max_index
+print(map)
+i=0
+j=0
+while i<10:
+  while j<10:
+      if map[i]==map[j] and i!=j:
+          if matrix[i][int(map[i])]>matrix[j][int(map[j])]:
+              #reassign map[j]
+              print(map[i], map[j])
+              matrix[j][int(map[j])]=0
+              map[j]=np.argmax(matrix[j,:])
+              i=0
+              j=0
+      j+=1
+  i+=1
+
+
 print(map)
 #compute accuracy
 count=0
@@ -380,16 +392,6 @@ for i in range(10):
 print(count)
 accuracy = count/48000 *100
 print("The accuracy is: ",accuracy,"%")
-
-
-
-
-
-
-
-
-
-
 
 
 

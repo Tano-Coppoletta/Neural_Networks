@@ -37,19 +37,25 @@ for i in range(10):
       if labels[z].item()==i and kmeans.labels_[z]==j:
         matrix[i][j]+=1
 
-
-max =0
-map = np.zeros((10,1))
-
-#i are the true label
-#j are the label assigned by the k-means
 for i in range(10):
-  for j in range(10):
-    if matrix[i][j]> max:
-      if j not in map:
-        max = matrix[i][j]
-        map[i]=j
-  max=0
+  max_index = np.argmax(matrix[i,:])
+  map[i]=max_index
+print(map)
+i=0
+j=0
+while i<10:
+  while j<10:
+      if map[i]==map[j] and i!=j:
+          if matrix[i][int(map[i])]>matrix[j][int(map[j])]:
+              #reassign map[j]
+              matrix[j][int(map[j])]=0
+              map[j]=np.argmax(matrix[j,:])
+              i=0
+              j=0
+      j+=1
+  i+=1
+
+
 print(map)
 #compute accuracy
 count=0
@@ -57,8 +63,6 @@ for i in range(10):
   for j in range(48000):
     if kmeans.labels_[j]==map[i] and labels[j].item()==i:
       count+=1
-print(count)
 accuracy = count/48000 *100
 print("The accuracy is: ",accuracy,"%")
-
 
